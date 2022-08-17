@@ -134,4 +134,13 @@
   .description {
     margin: 1rem 1rem;
   }
+  .container {
+    margin: 1rem 0 0 1rem;
+  }
+  .button3 {
+    margin-right: 5rem;
+  }
+  .containerInput {
+    margin: 0.2rem 0;
+  }
 }
