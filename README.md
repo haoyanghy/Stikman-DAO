@@ -2,6 +2,8 @@
 
 - Website: https://stikman-dao.vercel.app/
 - Website is currently only compatible with pc and mobile screen size only
+- Creating, voting and executing on a proposal are only available to users who own Stikman NFT
+- The more Stikman NFT a user owns, the more votes he can cast
 - Gas is used when
   1. Creating a proposal
   2. Voting on a proposal
