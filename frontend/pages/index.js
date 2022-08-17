@@ -12,25 +12,16 @@ import {
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  // ETH Balance of the DAO contract
   const [treasuryBalance, setTreasuryBalance] = useState("0");
-  // Number of proposals created in the DAO
   const [numProposals, setNumProposals] = useState("0");
-  // Array of all proposals created in the DAO
   const [proposals, setProposals] = useState([]);
-  // User's balance of Stikman NFTs
   const [nftBalance, setNftBalance] = useState(0);
-  // Fake NFT Token ID to purchase. Used when creating a proposal.
   const [fakeNftTokenId, setFakeNftTokenId] = useState("");
-  // One of "Create Proposal" or "View Proposals"
   const [selectedTab, setSelectedTab] = useState("");
-  // True if waiting for a transaction to be mined, false otherwise.
   const [loading, setLoading] = useState(false);
-  // True if user has connected their wallet, false otherwise
   const [walletConnected, setWalletConnected] = useState(false);
   const web3ModalRef = useRef();
 
-  // Helper function to connect wallet
   const connectWallet = async () => {
     try {
       await getProviderOrSigner();
@@ -40,30 +31,7 @@ export default function Home() {
     }
   };
 
-  // Reads the ETH balance of the DAO contract and sets the `treasuryBalance` state variable
-  const getDAOTreasuryBalance = async () => {
-    try {
-      const provider = await getProviderOrSigner();
-      const balance = await provider.getBalance(STIKMAN_DAO_CONTRACT_ADDRESS);
-      setTreasuryBalance(balance.toString());
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Reads the number of proposals in the DAO contract and sets the `numProposals` state variable
-  const getNumProposalsInDAO = async () => {
-    try {
-      const provider = await getProviderOrSigner();
-      const contract = getDaoContractInstance(provider);
-      const daoNumProposals = await contract.numProposals();
-      setNumProposals(daoNumProposals.toString());
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Reads the balance of the user's Stikman NFTs and sets the `nftBalance` state variable
+  //
   const getUserNFTBalance = async () => {
     try {
       const signer = await getProviderOrSigner(true);
@@ -75,7 +43,28 @@ export default function Home() {
     }
   };
 
-  // Calls the `createProposal` function in the contract, using the tokenId from `fakeNftTokenId`
+  const getDAOTreasuryBalance = async () => {
+    try {
+      const provider = await getProviderOrSigner();
+      // No contract instance needed because not calling any function from any of the contracts
+      const balance = await provider.getBalance(STIKMAN_DAO_CONTRACT_ADDRESS);
+      setTreasuryBalance(balance.toString());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getNumProposalsInDAO = async () => {
+    try {
+      const provider = await getProviderOrSigner();
+      const contract = getDaoContractInstance(provider);
+      const daoNumProposals = await contract.numProposals();
+      setNumProposals(daoNumProposals.toString());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const createProposal = async () => {
     try {
       const signer = await getProviderOrSigner(true);
@@ -165,15 +154,14 @@ export default function Home() {
     }
   };
 
-  // Helper function to fetch a Provider/Signer instance from Metamask
   const getProviderOrSigner = async (needSigner = false) => {
     const provider = await web3ModalRef.current.connect();
     const web3Provider = new providers.Web3Provider(provider);
 
     const { chainId } = await web3Provider.getNetwork();
     if (chainId !== 4) {
-      window.alert("Please switch to the Rinkeby network!");
-      throw new Error("Please switch to the Rinkeby network");
+      window.alert("Please switch to Rinkeby network!");
+      throw new Error("Please switch to Rinkeby network");
     }
 
     if (needSigner) {
@@ -183,8 +171,7 @@ export default function Home() {
     return web3Provider;
   };
 
-  // Helper function to return a DAO Contract instance
-  // given a Provider/Signer
+  // Return DAO Contract instance
   const getDaoContractInstance = (providerOrSigner) => {
     return new Contract(
       STIKMAN_DAO_CONTRACT_ADDRESS,
@@ -193,8 +180,7 @@ export default function Home() {
     );
   };
 
-  // Helper function to return a Stikman NFT Contract instance
-  // given a Provider/Signer
+  // Return Stikman NFT Contract instance
   const getStikmanNFTContractInstance = (providerOrSigner) => {
     return new Contract(
       STIKMAN_NFT_CONTRACT_ADDRESS,
@@ -203,11 +189,6 @@ export default function Home() {
     );
   };
 
-  // piece of code that runs everytime the value of `walletConnected` changes
-  // so when a wallet connects or disconnects
-  // Prompts user to connect wallet if not connected
-  // and then calls helper functions to fetch the
-  // DAO Treasury Balance, User NFT Balance, and Number of Proposals in the DAO
   useEffect(() => {
     if (!walletConnected) {
       web3ModalRef.current = new Web3Modal({
@@ -217,8 +198,8 @@ export default function Home() {
       });
 
       connectWallet().then(() => {
-        getDAOTreasuryBalance();
         getUserNFTBalance();
+        getDAOTreasuryBalance();
         getNumProposalsInDAO();
       });
     }
@@ -233,7 +214,6 @@ export default function Home() {
     }
   }, [selectedTab]);
 
-  // Render the contents of the appropriate tab based on `selectedTab`
   function renderTabs() {
     if (selectedTab === "Create Proposal") {
       return renderCreateProposalTab();
@@ -243,7 +223,6 @@ export default function Home() {
     return null;
   }
 
-  // Renders the 'Create Proposal' tab content
   function renderCreateProposalTab() {
     if (loading) {
       return (
@@ -255,7 +234,7 @@ export default function Home() {
       return (
         <div className={styles.description}>
           You do not own any Stikman NFTs. <br />
-          <b>You cannot create or vote on proposals</b>
+          <b>You cannot create or vote on any proposal.</b>
         </div>
       );
     } else {
@@ -263,6 +242,7 @@ export default function Home() {
         <div className={styles.container}>
           <label>Fake NFT Token ID to Purchase: </label>
           <input
+            className={styles.containerInput}
             placeholder="0"
             type="number"
             onChange={(e) => setFakeNftTokenId(e.target.value)}
@@ -275,7 +255,6 @@ export default function Home() {
     }
   }
 
-  // Renders the 'View Proposals' tab content
   function renderViewProposalsTab() {
     if (loading) {
       return (
@@ -357,17 +336,18 @@ export default function Home() {
               className={styles.button}
               onClick={() => setSelectedTab("Create Proposal")}
             >
-              Create a proposal
+              Create Proposal
             </button>
             <button
               className={styles.button}
               onClick={() => setSelectedTab("View Proposals")}
             >
-              View proposals
+              View Proposals
             </button>
           </div>
           {renderTabs()}
         </div>
+
         <div>
           <img className={styles.image} src="/1.png" />
         </div>

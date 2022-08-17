@@ -10,9 +10,8 @@
 }
 
 .image {
-  width: 60%;
-  height: 50%;
-  margin-left: 20%;
+  width: 30rem;
+  height: 30rem;
 }
 
 .title {
@@ -35,16 +34,17 @@
   padding: 0.8rem;
   width: 12rem;
   cursor: pointer;
-  margin-right: 2rem;
+  margin-right: 1.5rem;
 }
 
 .button2 {
   border-radius: 4px;
-  background-color: indigo;
+  background-color: purple;
   border: none;
   color: #ffffff;
   font-size: 18px;
-  padding: 10px;
+  padding: 0.8rem;
+  width: 8rem;
   cursor: pointer;
   margin-right: 2%;
   margin-top: 1rem;
@@ -59,7 +59,12 @@
 }
 
 .container {
-  margin-top: 2rem;
+  font-size: 1.2rem;
+  margin-top: 1.8rem;
+}
+.containerInput {
+  margin-left: 1rem;
+  background-color: #24242c;
 }
 
 .flex {
