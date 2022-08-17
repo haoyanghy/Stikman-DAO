@@ -1,7 +1,12 @@
 ## Notes:
 
 - Website:
-
+- Website is currently only compatible with PC screen size
+- Gas is used when
+  1. Creating a proposal
+  2. Voting on a proposal
+  3. Executing a proposal
+  
 ## Stikman DAO contract
 
 - Address: 0x677570c5545A9520beD5C0187B5799f134D4590E
