@@ -4,10 +4,10 @@ import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
 import {
-  CRYPTODEVS_DAO_ABI,
-  CRYPTODEVS_DAO_CONTRACT_ADDRESS,
-  CRYPTODEVS_NFT_ABI,
-  CRYPTODEVS_NFT_CONTRACT_ADDRESS,
+  STIKMAN_DAO_ABI,
+  STIKMAN_DAO_CONTRACT_ADDRESS,
+  STIKMAN_NFT_ABI,
+  STIKMAN_NFT_CONTRACT_ADDRESS,
 } from "../constants";
 import styles from "../styles/Home.module.css";
 
@@ -18,7 +18,7 @@ export default function Home() {
   const [numProposals, setNumProposals] = useState("0");
   // Array of all proposals created in the DAO
   const [proposals, setProposals] = useState([]);
-  // User's balance of CryptoDevs NFTs
+  // User's balance of Stikman NFTs
   const [nftBalance, setNftBalance] = useState(0);
   // Fake NFT Token ID to purchase. Used when creating a proposal.
   const [fakeNftTokenId, setFakeNftTokenId] = useState("");
@@ -44,9 +44,7 @@ export default function Home() {
   const getDAOTreasuryBalance = async () => {
     try {
       const provider = await getProviderOrSigner();
-      const balance = await provider.getBalance(
-        CRYPTODEVS_DAO_CONTRACT_ADDRESS
-      );
+      const balance = await provider.getBalance(STIKMAN_DAO_CONTRACT_ADDRESS);
       setTreasuryBalance(balance.toString());
     } catch (error) {
       console.error(error);
@@ -65,11 +63,11 @@ export default function Home() {
     }
   };
 
-  // Reads the balance of the user's CryptoDevs NFTs and sets the `nftBalance` state variable
+  // Reads the balance of the user's Stikman NFTs and sets the `nftBalance` state variable
   const getUserNFTBalance = async () => {
     try {
       const signer = await getProviderOrSigner(true);
-      const nftContract = getCryptodevsNFTContractInstance(signer);
+      const nftContract = getStikmanNFTContractInstance(signer);
       const balance = await nftContract.balanceOf(signer.getAddress());
       setNftBalance(parseInt(balance.toString()));
     } catch (error) {
@@ -189,18 +187,18 @@ export default function Home() {
   // given a Provider/Signer
   const getDaoContractInstance = (providerOrSigner) => {
     return new Contract(
-      CRYPTODEVS_DAO_CONTRACT_ADDRESS,
-      CRYPTODEVS_DAO_ABI,
+      STIKMAN_DAO_CONTRACT_ADDRESS,
+      STIKMAN_DAO_ABI,
       providerOrSigner
     );
   };
 
-  // Helper function to return a CryptoDevs NFT Contract instance
+  // Helper function to return a Stikman NFT Contract instance
   // given a Provider/Signer
-  const getCryptodevsNFTContractInstance = (providerOrSigner) => {
+  const getStikmanNFTContractInstance = (providerOrSigner) => {
     return new Contract(
-      CRYPTODEVS_NFT_CONTRACT_ADDRESS,
-      CRYPTODEVS_NFT_ABI,
+      STIKMAN_NFT_CONTRACT_ADDRESS,
+      STIKMAN_NFT_ABI,
       providerOrSigner
     );
   };
@@ -256,7 +254,7 @@ export default function Home() {
     } else if (nftBalance === 0) {
       return (
         <div className={styles.description}>
-          You do not own any CryptoDevs NFTs. <br />
+          You do not own any Stikman NFTs. <br />
           <b>You cannot create or vote on proposals</b>
         </div>
       );
@@ -359,13 +357,13 @@ export default function Home() {
               className={styles.button}
               onClick={() => setSelectedTab("Create Proposal")}
             >
-              Create Proposal
+              Create a proposal
             </button>
             <button
               className={styles.button}
               onClick={() => setSelectedTab("View Proposals")}
             >
-              View Proposals
+              View proposals
             </button>
           </div>
           {renderTabs()}
