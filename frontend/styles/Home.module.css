@@ -124,4 +124,7 @@
   .button {
     margin: 1.5rem;
   }
+  .image {
+    width: 100%;
+  }
 }
