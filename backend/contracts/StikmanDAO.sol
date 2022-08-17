@@ -15,7 +15,6 @@ interface IFakeNFTMarketplace {
 interface IStikmanNFT {
     // Returns the number of NFTs owned by the given address
     function balanceOf(address owner) external view returns (uint256);
-
     // Returns a tokenID at given index for owner
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256);
 }
