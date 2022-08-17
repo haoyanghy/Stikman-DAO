@@ -1,6 +1,7 @@
 ## Notes:
 
 - Website:
+- Website is currently only compatible for pc screen size
 - Gas is used when
  1. Creating a proposal
  2. Voting on a proposal
