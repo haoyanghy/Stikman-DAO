@@ -12,7 +12,7 @@ async function main() {
   console.log("FakeNFTMarketplace deployed to: ", fakeNftMarketplace.address);
 
   // Now deploy the StikmanDAO contract
-  const StikmanDAO = await ethers.getContractFactory("StikmanDAO");
+  const StikmanDAO = await ethers.getContractFactory("Stikman");
   const stikmanDAO = await StikmanDAO.deploy(
     fakeNftMarketplace.address,
     STIKMAN_NFT_CONTRACT_ADDRESS,
