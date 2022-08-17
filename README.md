@@ -1,7 +1,7 @@
 ## Notes:
 
 - Website: https://stikman-dao.vercel.app/
-- Website is currently only compatible with PC screen size
+- Website is currently only compatible with pc and mobile screen size only
 - Gas is used when
   1. Creating a proposal
   2. Voting on a proposal
