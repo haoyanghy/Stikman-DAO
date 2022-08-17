@@ -10,6 +10,8 @@ import {
   STIKMAN_NFT_CONTRACT_ADDRESS,
 } from "../constants";
 import styles from "../styles/Home.module.css";
+import { motion } from "framer-motion";
+import ThreeDotsWave from "../components/ThreeDotsWave";
 
 export default function Home() {
   const [treasuryBalance, setTreasuryBalance] = useState("0");
@@ -80,9 +82,8 @@ export default function Home() {
     }
   };
 
-  // Helper function to fetch and parse one proposal from the DAO contract
-  // Given the Proposal ID
-  // and converts the returned data into a Javascript object with values we can use
+  // Fetch and parse one proposal from the DAO contract based on the Proposal ID,
+  // and converts the returned data into a Javascript object with values that we can use
   const fetchProposalById = async (id) => {
     try {
       const provider = await getProviderOrSigner();
@@ -102,8 +103,7 @@ export default function Home() {
     }
   };
 
-  // Runs a loop `numProposals` times to fetch all proposals in the DAO
-  // and sets the `proposals` state variable
+  // Runs a loop `numProposals` times to fetch all proposals in the DAO and sets the `proposals` state variable
   const fetchAllProposals = async () => {
     try {
       const proposals = [];
@@ -118,8 +118,6 @@ export default function Home() {
     }
   };
 
-  // Calls the `voteOnProposal` function in the contract, using the passed
-  // proposal ID and Vote
   const voteOnProposal = async (proposalId, _vote) => {
     try {
       const signer = await getProviderOrSigner(true);
@@ -137,8 +135,6 @@ export default function Home() {
     }
   };
 
-  // Calls the `executeProposal` function in the contract, using
-  // the passed proposal ID
   const executeProposal = async (proposalId) => {
     try {
       const signer = await getProviderOrSigner(true);
@@ -171,7 +167,7 @@ export default function Home() {
     return web3Provider;
   };
 
-  // Return DAO Contract instance
+  // Returns DAO Contract instance
   const getDaoContractInstance = (providerOrSigner) => {
     return new Contract(
       STIKMAN_DAO_CONTRACT_ADDRESS,
@@ -180,7 +176,7 @@ export default function Home() {
     );
   };
 
-  // Return Stikman NFT Contract instance
+  // Returns Stikman NFT Contract instance
   const getStikmanNFTContractInstance = (providerOrSigner) => {
     return new Contract(
       STIKMAN_NFT_CONTRACT_ADDRESS,
@@ -205,9 +201,7 @@ export default function Home() {
     }
   }, [walletConnected]);
 
-  // Piece of code that runs everytime the value of `selectedTab` changes
-  // Used to re-fetch all proposals in the DAO when user switches
-  // to the 'View Proposals' tab
+  // Used to re-fetch all proposals in the DAO when user switches to 'View Proposals' tab
   useEffect(() => {
     if (selectedTab === "View Proposals") {
       fetchAllProposals();
@@ -228,6 +222,19 @@ export default function Home() {
       return (
         <div className={styles.description}>
           Loading... Waiting for transaction...
+          <div>
+            <div className={styles.gridContainer}>
+              <div>
+                <ThreeDotsWave />
+              </div>
+              <div>
+                <ThreeDotsWave />
+              </div>
+              <div>
+                <ThreeDotsWave />
+              </div>
+            </div>
+          </div>
         </div>
       );
     } else if (nftBalance === 0) {
@@ -247,9 +254,13 @@ export default function Home() {
             type="number"
             onChange={(e) => setFakeNftTokenId(e.target.value)}
           />
-          <button className={styles.button2} onClick={createProposal}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className={styles.button3}
+            onClick={createProposal}
+          >
             Create
-          </button>
+          </motion.button>
         </div>
       );
     }
@@ -260,11 +271,24 @@ export default function Home() {
       return (
         <div className={styles.description}>
           Loading... Waiting for transaction...
+          <div className={styles.gridContainer}>
+            <div>
+              <ThreeDotsWave />
+            </div>
+            <div>
+              <ThreeDotsWave />
+            </div>
+            <div>
+              <ThreeDotsWave />
+            </div>
+          </div>
         </div>
       );
     } else if (proposals.length === 0) {
       return (
-        <div className={styles.description}>No proposals have been created</div>
+        <div className={styles.description}>
+          No proposals have been created.
+        </div>
       );
     } else {
       return (
@@ -272,38 +296,49 @@ export default function Home() {
           {proposals.map((p, index) => (
             <div key={index} className={styles.proposalCard}>
               <p>Proposal ID: {p.proposalId}</p>
-              <p>Fake NFT to Purchase: {p.nftTokenId}</p>
+              <p>
+                {"Fake NFT to Purchase (Index): "}
+                {p.nftTokenId}
+              </p>
               <p>Deadline: {p.deadline.toLocaleString()}</p>
               <p>Yay Votes: {p.yayVotes}</p>
               <p>Nay Votes: {p.nayVotes}</p>
               <p>Executed?: {p.executed.toString()}</p>
+              {/* If deadline not exceeded and proposal not executed, display vote buttons */}
+              {/* If deadline exceeded and proposal not executed, display execution button */}
+              {/* If deadline exceeded and proposal executed, display "Proposal executed" */}
               {p.deadline.getTime() > Date.now() && !p.executed ? (
                 <div className={styles.flex}>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
                     className={styles.button2}
                     onClick={() => voteOnProposal(p.proposalId, "YAY")}
                   >
                     Vote YAY
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
                     className={styles.button2}
                     onClick={() => voteOnProposal(p.proposalId, "NAY")}
                   >
                     Vote NAY
-                  </button>
+                  </motion.button>
                 </div>
               ) : p.deadline.getTime() < Date.now() && !p.executed ? (
                 <div className={styles.flex}>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
                     className={styles.button2}
                     onClick={() => executeProposal(p.proposalId)}
                   >
-                    Execute Proposal{" "}
+                    {"Execute Proposal "}
                     {p.yayVotes > p.nayVotes ? "(YAY)" : "(NAY)"}
-                  </button>
+                  </motion.button>
                 </div>
               ) : (
-                <div className={styles.description}>Proposal Executed</div>
+                <div className={styles.description}>
+                  <b>Proposal Executed</b>
+                </div>
               )}
             </div>
           ))}
@@ -332,18 +367,20 @@ export default function Home() {
             Total Number of Proposals: {numProposals}
           </div>
           <div className={styles.flex}>
-            <button
+            <motion.button
               className={styles.button}
+              whileHover={{ scale: 1.05 }}
               onClick={() => setSelectedTab("Create Proposal")}
             >
               Create Proposal
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={styles.button}
+              whileHover={{ scale: 1.05 }}
               onClick={() => setSelectedTab("View Proposals")}
             >
               View Proposals
-            </button>
+            </motion.button>
           </div>
           {renderTabs()}
         </div>
