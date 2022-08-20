@@ -2,6 +2,8 @@
 
 - Website: https://stikman-dao.vercel.app/
 - Website is currently only compatible with pc and mobile screen size only
+- All the proposals are aim to buy a certain NFT from the market, in this project we are using a fake NFT market because
+it's simplier than to deal with the real NFT market
 - Creating, voting and executing on a proposal are only available to users who own Stikman NFT
 - The more Stikman NFT a user owns, the more votes he can cast
 - Gas is used when
